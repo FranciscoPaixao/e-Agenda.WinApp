@@ -1,6 +1,6 @@
-﻿namespace e_Agenda.WinApp.ModuloTarefa
+﻿namespace e_Agenda.WinApp.ModuloContato
 {
-    partial class ListagemTarefaControl
+    partial class TabelaContatoUserControl
     {
         /// <summary> 
         /// Required designer variable.
@@ -28,31 +28,32 @@
         /// </summary>
         private void InitializeComponent()
         {
-            listTarefa = new ListBox();
+            gridTabela = new System.Windows.Forms.DataGridView();
+            ((System.ComponentModel.ISupportInitialize)gridTabela).BeginInit();
             SuspendLayout();
             // 
-            // listTarefa
+            // gridTabela
             // 
-            listTarefa.Dock = DockStyle.Fill;
-            listTarefa.FormattingEnabled = true;
-            listTarefa.ItemHeight = 15;
-            listTarefa.Location = new Point(0, 0);
-            listTarefa.Name = "listTarefa";
-            listTarefa.Size = new Size(689, 334);
-            listTarefa.TabIndex = 0;
+            gridTabela.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            gridTabela.Location = new Point(224, 103);
+            gridTabela.Name = "gridTabela";
+            gridTabela.RowTemplate.Height = 25;
+            gridTabela.Size = new Size(240, 150);
+            gridTabela.TabIndex = 0;
             // 
-            // ListagemTarefaControl
+            // TabelaContatoUserControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(listTarefa);
-            Name = "ListagemTarefaControl";
-            Size = new Size(689, 334);
+            Controls.Add(gridTabela);
+            Name = "TabelaContatoUserControl";
+            Size = new Size(800, 373);
+            ((System.ComponentModel.ISupportInitialize)gridTabela).EndInit();
             ResumeLayout(false);
         }
 
         #endregion
 
-        private ListBox listTarefa;
+        private System.Windows.Forms.DataGridView gridTabela;
     }
 }

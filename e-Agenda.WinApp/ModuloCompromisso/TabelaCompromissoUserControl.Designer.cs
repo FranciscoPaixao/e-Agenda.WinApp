@@ -1,6 +1,6 @@
-﻿namespace e_Agenda.WinApp.ModuloContato
+﻿namespace e_Agenda.WinApp.ModuloCompromisso
 {
-    partial class ListagemContatoControl
+    partial class TabelaCompromissoUserControl
     {
         /// <summary> 
         /// Required designer variable.
@@ -28,31 +28,32 @@
         /// </summary>
         private void InitializeComponent()
         {
-            listContato = new ListBox();
+            gridTabela = new DataGridView();
+            ((System.ComponentModel.ISupportInitialize)gridTabela).BeginInit();
             SuspendLayout();
             // 
-            // listContato
+            // gridTabela
             // 
-            listContato.Dock = DockStyle.Fill;
-            listContato.FormattingEnabled = true;
-            listContato.ItemHeight = 15;
-            listContato.Location = new Point(0, 0);
-            listContato.Name = "listContato";
-            listContato.Size = new Size(800, 373);
-            listContato.TabIndex = 0;
+            gridTabela.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            gridTabela.Location = new Point(94, 26);
+            gridTabela.Name = "gridTabela";
+            gridTabela.RowTemplate.Height = 25;
+            gridTabela.Size = new Size(240, 150);
+            gridTabela.TabIndex = 0;
             // 
-            // ListagemContatoControl
+            // TabelaCompromissoUserControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(listContato);
-            Name = "ListagemContatoControl";
-            Size = new Size(800, 373);
+            Controls.Add(gridTabela);
+            Name = "TabelaCompromissoUserControl";
+            Size = new Size(551, 243);
+            ((System.ComponentModel.ISupportInitialize)gridTabela).EndInit();
             ResumeLayout(false);
         }
 
         #endregion
 
-        private ListBox listContato;
+        private DataGridView gridTabela;
     }
 }

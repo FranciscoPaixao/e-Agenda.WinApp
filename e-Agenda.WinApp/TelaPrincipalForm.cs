@@ -1,73 +1,140 @@
+using e_Agenda.WinApp.Compartilhado;
+using e_Agenda.WinApp.ModuloCompromisso;
 using e_Agenda.WinApp.ModuloContato;
-using e_Agenda.WinApp.ModuloTarefa;
+using System;
+using System.Threading;
+using System.Windows.Forms;
 
 namespace e_Agenda.WinApp
 {
     public partial class TelaPrincipalForm : Form
     {
+        private ControladorBase controlador;
+        private RepositorioContato repContato = new RepositorioContato();
+        private RepositorioCompromisso repCompromisso = new RepositorioCompromisso();
+
+        private CancellationTokenSource cancellationTokenSource;
+        private Thread threadSalvarAutomaticamente;
+        private ControladorDados controladorDados;
+
+        private static TelaPrincipalForm telaPrincipal;
+
         public TelaPrincipalForm()
         {
             InitializeComponent();
+            controladorDados = new ControladorDados(repContato, repCompromisso);
+            controladorDados.CarregarDados();
+            cancellationTokenSource = new CancellationTokenSource();
+            threadSalvarAutomaticamente = new Thread(() => controladorDados.SalvarDados(cancellationTokenSource));
+            threadSalvarAutomaticamente.Start();
+
+            telaPrincipal = this;
         }
 
-        private void contatosMenuItem_Click(object sender, EventArgs e)
+        public void AtualizarRodape(string mensagem)
         {
-            panelRegistros.Controls.Clear();
-
-            labelTipoCadastro.Text = "Cadastro de Contatos";
-            btnInserir.ToolTipText = "Inserir Novo Contato";
-            btnEditar.ToolTipText = "Editar Contato";
-            btnExcluir.ToolTipText = "Excluir Contato";
-
-            ListagemContatoControl listagemContatos = new ListagemContatoControl();
-
-            listagemContatos.Dock = DockStyle.Fill;
-
-            panelRegistros.Controls.Add(listagemContatos);
+            labelRodape.Text = mensagem;
         }
 
-        private void compromissosMenuItem_Click(object sender, EventArgs e)
+        public static TelaPrincipalForm Instancia
         {
-
-        }
-
-        private void tarefasMenuItem_Click(object sender, EventArgs e)
-        {
-            panelRegistros.Controls.Clear();
-
-            labelTipoCadastro.Text = "Cadastro de Tarefas";
-            btnInserir.ToolTipText = "Inserir Nova Tarefa";
-            btnEditar.ToolTipText = "Editar Tarefa";
-            btnExcluir.ToolTipText = "Excluir Tarefa";
-
-            ListagemTarefaControl listagemTarefas = new ListagemTarefaControl();
-
-            listagemTarefas.Dock = DockStyle.Fill;
-
-            panelRegistros.Controls.Add(listagemTarefas);
-        }
-
-        private void despesasMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void categoriasMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void btnInserir_Click(object sender, EventArgs e)
-        {
-            if (labelTipoCadastro.Text == "Cadastro de Tarefas") { 
-                TelaTarefaForm telaTarefa = new TelaTarefaForm();
-                telaTarefa.ShowDialog();
-            }
-            else if (labelTipoCadastro.Text == "Cadastro de Contatos")
+            get
             {
-                TelaContatoForm telaContato = new TelaContatoForm();
-                telaContato.ShowDialog();
+                if (telaPrincipal == null)
+                    telaPrincipal = new TelaPrincipalForm();
+
+                return telaPrincipal;
             }
+        }
+
+        private void toolStripItem_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem itemClicado = (ToolStripMenuItem)sender;
+            switch (itemClicado.Name)
+            {
+                case "contatosMenuItem":
+                    controlador = new ControladorContato(repContato);
+                    break;
+                case "compromissosMenuItem":
+                    controlador = new ControladorCompromisso(repCompromisso, repContato);
+                    break;
+                default:
+                    break;
+            }
+            ConfigurarToolTips(controlador);
+
+            ConfigurarListagem(controlador);
+
+            ConfigurarTelaPrincipal(controlador);
+        }
+        private void botaoBarraFerramentas_Click(object sender, EventArgs e)
+        {
+            ToolStripButton botaoCliclado = (ToolStripButton)sender;
+            switch (botaoCliclado.Name)
+            {
+                case "btnInserir":
+                    controlador.Inserir();
+                    break;
+                case "btnEditar":
+                    controlador.Editar();
+                    break;
+                case "btnExcluir":
+                    controlador.Excluir();
+                    break;
+                case "btnFiltrar":
+                    controlador.Filtrar();
+                    break;
+                default:
+                    break;
+            }
+        }
+        private void ConfigurarTelaPrincipal(ControladorBase controladorBase)
+        {
+            labelTipoCadastro.Text = controladorBase.ObterTipoCadastro;
+
+            tsBarraFerramentas.Enabled = true;
+
+            ConfigurarToolTips(controladorBase);
+
+            ConfigurarEstados(controlador);
+
+            ConfigurarListagem(controladorBase);
+
+        }
+
+        private void ConfigurarListagem(ControladorBase controladorBase)
+        {
+            UserControl tabela = controladorBase.ObterTabela();
+
+            panelRegistros.Controls.Clear();
+
+            panelRegistros.Controls.Add(tabela);
+        }
+
+        private void ConfigurarToolTips(ControladorBase controlador)
+        {
+            btnInserir.ToolTipText = controlador.ToolTipInserir;
+            btnEditar.ToolTipText = controlador.ToolTipEditar;
+            btnExcluir.ToolTipText = controlador.ToolTipExcluir;
+            btnFiltrar.ToolTipText = controlador.ToolTipFiltrar;
+            btnAdicionarItens.ToolTipText = controlador.ToolTipAdicionarItens;
+            btnConcluirItens.ToolTipText = controlador.ToolTipConcluirItens;
+        }
+
+        private void ConfigurarEstados(ControladorBase controlador)
+        {
+            btnInserir.Enabled = controlador.InserirHabilitado;
+            btnEditar.Enabled = controlador.EditarHabilitado;
+            btnExcluir.Enabled = controlador.ExcluirHabilitado;
+            btnFiltrar.Enabled = controlador.FiltrarHabilitado;
+            btnAdicionarItens.Enabled = controlador.AdicionarItensHabilitado;
+            btnConcluirItens.Enabled = controlador.ConcluirItensHabilitado;
+        }
+
+        private void TelaPrincipalForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            cancellationTokenSource.Cancel();
+            threadSalvarAutomaticamente.Join();
         }
     }
 }
