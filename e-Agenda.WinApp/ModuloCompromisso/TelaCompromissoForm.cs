@@ -24,13 +24,15 @@ namespace e_Agenda.WinApp.ModuloCompromisso
         }
         public void CarregarContatos(List<Contato> contatos)
         {
-            foreach(Contato contato in contatos)
+            foreach (Contato contato in contatos)
             {
-                cmbContatos.Items.Add(contato.nome);
+                cmbContatos.Items.Add(contato);
             }
         }
         public void ConfigurarTela(Compromisso compromisso, Contato contato)
         {
+            this.Text = "Edição de Compromisso";
+
             txtId.Text = compromisso.id.ToString();
 
             txtAssunto.Text = compromisso.assunto;
@@ -45,14 +47,14 @@ namespace e_Agenda.WinApp.ModuloCompromisso
             {
                 chkSelecionarContato.Checked = true;
                 cmbContatos.Enabled = true;
-                cmbContatos.SelectedIndex = cmbContatos.Items.IndexOf(contato.nome);
+                cmbContatos.SelectedIndex = cmbContatos.Items.IndexOf(contato);
             }
 
             if (compromisso.tipoLocal == TipoLocalEnum.Presencial)
             {
                 rdbPresencial.Checked = true;
                 txtLocalPresencial.Text = compromisso.localPresencial;
-            } 
+            }
             else
             {
                 rdbOnline.Checked = true;
@@ -62,6 +64,8 @@ namespace e_Agenda.WinApp.ModuloCompromisso
         public Compromisso ObterCompromisso()
         {
             Compromisso compromisso = new Compromisso();
+
+            compromisso.id = Convert.ToInt32(txtId.Text);
 
             compromisso.assunto = txtAssunto.Text;
 
@@ -74,15 +78,14 @@ namespace e_Agenda.WinApp.ModuloCompromisso
             compromisso.tipoLocal = rdbOnline.Checked ? TipoLocalEnum.Online : TipoLocalEnum.Presencial;
 
             string local = rdbOnline.Checked ? txtLocalOnline.Text : txtLocalPresencial.Text;
-            if(chkSelecionarContato.Checked)
+
+            if (chkSelecionarContato.Checked)
             {
                 Contato contato = (Contato)cmbContatos.SelectedItem;
+                compromisso.contatoID = contato.id;
             }
-            else
-            {
-                compromisso.contatoID = -1;
-            }
-            if(compromisso.tipoLocal == TipoLocalEnum.Online)
+
+            if (compromisso.tipoLocal == TipoLocalEnum.Online)
             {
                 compromisso.localOnline = local;
             }
@@ -107,6 +110,18 @@ namespace e_Agenda.WinApp.ModuloCompromisso
         private void chkSelecionarContato_CheckedChanged(object sender, EventArgs e)
         {
             cmbContatos.Enabled = !cmbContatos.Enabled;
+        }
+
+        private void btnGravar_Click(object sender, EventArgs e)
+        {
+            Compromisso compromisso = ObterCompromisso();
+            string[] erros = compromisso.Validar();
+            if (erros.Length > 0)
+            {
+                TelaPrincipalForm.Instancia.AtualizarRodape(erros[0]);
+
+                DialogResult = DialogResult.None;
+            }
         }
     }
 }

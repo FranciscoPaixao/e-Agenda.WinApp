@@ -133,6 +133,7 @@
             btnGravar.TabIndex = 35;
             btnGravar.Text = "Gravar";
             btnGravar.UseVisualStyleBackColor = true;
+            btnGravar.Click += btnGravar_Click;
             // 
             // label6
             // 
@@ -266,7 +267,7 @@
             Controls.Add(txtId);
             Controls.Add(label1);
             Name = "TelaCompromissoForm";
-            Text = "TelaCompromissoForm";
+            Text = "Cadastro de Compromisso";
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             ResumeLayout(false);

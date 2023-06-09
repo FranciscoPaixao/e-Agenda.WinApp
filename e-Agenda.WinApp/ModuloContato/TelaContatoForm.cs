@@ -38,6 +38,7 @@ namespace e_Agenda.WinApp.ModuloContato
         }
         public void ConfigurarTela(Contato contato)
         {
+            this.Text = "Edição de Contato";
             txtId.Text = contato.id.ToString();
             txtNome.Text = contato.nome;
             txtEmail.Text = contato.email;

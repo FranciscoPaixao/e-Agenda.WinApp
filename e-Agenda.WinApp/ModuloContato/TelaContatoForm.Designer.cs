@@ -183,7 +183,7 @@
             Controls.Add(txtId);
             Controls.Add(label1);
             Name = "TelaContatoForm";
-            Text = "TelaContatoForm";
+            Text = "Cadastro de Contato";
             ResumeLayout(false);
             PerformLayout();
         }

@@ -14,21 +14,31 @@ namespace e_Agenda.WinApp
         private RepositorioCompromisso repCompromisso = new RepositorioCompromisso();
 
         private CancellationTokenSource cancellationTokenSource;
-        private Thread threadSalvarAutomaticamente;
-        private ControladorDados controladorDados;
+        private Thread threadSalvarDados;
 
         private static TelaPrincipalForm telaPrincipal;
 
         public TelaPrincipalForm()
         {
             InitializeComponent();
-            controladorDados = new ControladorDados(repContato, repCompromisso);
-            controladorDados.CarregarDados();
+            repContato.CarregarRepositorio();
+            repCompromisso.CarregarRepositorio();
+            Console.WriteLine(repContato.ListaRegistros.Count);
             cancellationTokenSource = new CancellationTokenSource();
-            threadSalvarAutomaticamente = new Thread(() => controladorDados.SalvarDados(cancellationTokenSource));
-            threadSalvarAutomaticamente.Start();
+            threadSalvarDados = new Thread(() => SalvarDados(cancellationTokenSource));
+            threadSalvarDados.Start();
 
             telaPrincipal = this;
+        }
+
+        public void SalvarDados(CancellationTokenSource cancellationTokenSource)
+        {
+            while (!cancellationTokenSource.Token.IsCancellationRequested)
+            {
+                repContato.GravarRepositorio();
+                repCompromisso.GravarRepositorio();
+                Thread.Sleep(2000);
+            }
         }
 
         public void AtualizarRodape(string mensagem)
@@ -134,7 +144,7 @@ namespace e_Agenda.WinApp
         private void TelaPrincipalForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             cancellationTokenSource.Cancel();
-            threadSalvarAutomaticamente.Join();
+            threadSalvarDados.Join();
         }
     }
 }

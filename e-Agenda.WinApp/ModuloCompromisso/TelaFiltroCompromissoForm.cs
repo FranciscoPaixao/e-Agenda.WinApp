@@ -52,14 +52,14 @@ namespace e_Agenda.WinApp.ModuloCompromisso
         {
             this.dataInicial = default(DateTime);
             this.dataFinal = DateTime.Now.AddDays(-1);
-            
+
         }
 
         private void rbnCompromissosFuturos_CheckedChanged(object sender, EventArgs e)
         {
             this.dataInicial = DateTime.Now.AddDays(1);
             this.dataFinal = default(DateTime);
-            
+
         }
     }
 }

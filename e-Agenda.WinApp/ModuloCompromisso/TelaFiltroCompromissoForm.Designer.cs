@@ -45,10 +45,12 @@
             // rbnVisualizarTodos
             // 
             rbnVisualizarTodos.AutoSize = true;
+            rbnVisualizarTodos.Checked = true;
             rbnVisualizarTodos.Location = new Point(21, 22);
             rbnVisualizarTodos.Name = "rbnVisualizarTodos";
             rbnVisualizarTodos.Size = new Size(206, 19);
             rbnVisualizarTodos.TabIndex = 0;
+            rbnVisualizarTodos.TabStop = true;
             rbnVisualizarTodos.Text = "Visualizar Todos os Compromissos";
             rbnVisualizarTodos.UseVisualStyleBackColor = true;
             rbnVisualizarTodos.CheckedChanged += rbnVisualizarTodos_CheckedChanged;

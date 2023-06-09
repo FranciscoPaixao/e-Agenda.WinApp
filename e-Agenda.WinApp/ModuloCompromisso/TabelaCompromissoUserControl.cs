@@ -27,7 +27,10 @@ namespace e_Agenda.WinApp.ModuloCompromisso
 
             foreach (Compromisso compromisso in compromissos)
             {
-                string contato = repContato.SelecionarPorId(compromisso.contatoID).nome;
+                string contato = "";
+                if(compromisso.contatoID >= 0) {
+                    contato = repContato.SelecionarPorId(compromisso.contatoID).nome;
+                }
                 gridTabela.Rows.Add(compromisso.id, compromisso.assunto, compromisso.data.ToShortDateString(), compromisso.horaInicio.ToString(@"hh\:mm"), compromisso.horaTermino.ToString(@"hh\:mm"), contato, compromisso.tipoLocal);
             }
         }

@@ -53,5 +53,9 @@ namespace e_Agenda.WinApp.ModuloContato
             }
             return errors.ToArray();
         }
+        public override string ToString()
+        {
+            return nome;
+        }
     }
 }
